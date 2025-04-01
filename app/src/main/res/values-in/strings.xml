@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">asesment1</string>
+    <string name="title_description">Tetap sehat, Tetap Bahagia</string>
+    <string name="profile">Profile</string>
+    <string name="setting">Pengaturan</string>
+    <string name="notifications">Notifikasi</string>
+    <string name="menu">menu</string>
 </resources>

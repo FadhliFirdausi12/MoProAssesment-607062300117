@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">WellVibe</string>
     <string name="title_description">Stay Healthy, Stay Happy</string>
+    <string name="profile">Profile</string>
+    <string name="setting">Settings</string>
+    <string name="notifications">Notifications</string>
+    <string name="menu">Menu</string>
+
 
 </resources>
