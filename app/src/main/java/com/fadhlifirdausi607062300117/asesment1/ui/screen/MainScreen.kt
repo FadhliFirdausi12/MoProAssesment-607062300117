@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -115,12 +115,8 @@ fun MainScreen(navController: NavHostController) {
         ) { innerPadding ->
             Column(modifier = Modifier.padding(innerPadding)) {
                 HeroImageBanner()
-                ScreenContent(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                        .padding(0.dp)
-                ) // Padding tambahan agar lebih nyaman dibaca
+                ScreenContent(modifier = Modifier.weight(1f), navController)
+
             }
         }
     }
@@ -137,7 +133,7 @@ fun DrawerMenu(drawerState: DrawerState, scope: CoroutineScope, navController: N
         // Back Button to close the drawer
         IconButton(
             onClick = { scope.launch { drawerState.close() } },
-            modifier = Modifier.padding(top=20.dp)
+            modifier = Modifier.padding(top = 20.dp)
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -171,7 +167,8 @@ fun DrawerMenu(drawerState: DrawerState, scope: CoroutineScope, navController: N
                 .padding(16.dp)
                 .clickable {
                     scope.launch { drawerState.close() }
-                    navController.navigate("helpScreen") },
+                    navController.navigate("helpScreen")
+                },
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
@@ -187,7 +184,6 @@ fun DrawerMenu(drawerState: DrawerState, scope: CoroutineScope, navController: N
         }
     }
 }
-
 
 
 @Composable
@@ -242,16 +238,101 @@ fun HeroImageBanner() {
     }
 }
 
-
 @Composable
-fun ScreenContent(modifier: Modifier = Modifier) {
+fun FeatureBox(
+    title: String,
+    imageRes: Int,
+    backgroundColor: Color,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
     Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = androidx.compose.ui.Alignment.Center
+        modifier = modifier
+            .background(color = backgroundColor, shape = MaterialTheme.shapes.medium)
+            .clickable(onClick = onClick)
+            .padding(16.dp)
     ) {
-        Text(text = "Hello World!", style = MaterialTheme.typography.headlineMedium)
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = imageRes),
+                contentDescription = title,
+                modifier = Modifier
+                    .size(60.dp)
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
+            )
+        }
     }
 }
+
+@Composable
+fun ScreenContent(modifier: Modifier = Modifier, navController: NavHostController) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            FeatureBox(
+                title = stringResource(id = R.string.hydration),
+                imageRes = R.drawable.green_kiwi, // Ganti dengan resource icon kamu
+                backgroundColor = Color(0xFF2196F3), // Biru
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(8.dp),
+                onClick = {
+                    navController.navigate("hydrationScreen")
+                }
+            )
+            FeatureBox(
+                title = "Aktivity",
+                imageRes = R.drawable.orange, // Ganti icon sesuai
+                backgroundColor = Color(0xFF4CAF50), // Hijau
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(8.dp),
+                onClick = {
+                    navController.navigate("activityScreen")
+                }
+            )
+        }
+
+        Row(modifier = Modifier.fillMaxWidth()) {
+            FeatureBox(
+                title = "Mood",
+                imageRes = R.drawable.peach_grape, // Ganti icon sesuai
+                backgroundColor = Color(0xFFFFA726), // Oranye
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(8.dp),
+                onClick = {
+                    navController.navigate("moodScreen")
+                }
+            )
+            FeatureBox(
+                title = "Health Tips",
+                imageRes = R.drawable.peach_grape, // Ganti icon sesuai
+                backgroundColor = Color(0xFFAB47BC), // Ungu
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(8.dp),
+                onClick = {
+                    navController.navigate("tipsScreen")
+                }
+            )
+        }
+    }
+}
+
 
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)

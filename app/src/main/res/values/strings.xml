@@ -8,6 +8,7 @@
     <string name="help">Help</string>
     <string name="about_app">About App</string>
     <string name="list_kosong">Nothing here</string>
+    <string name="hydration">Hydration</string>
     <string name="x_diklik" translatable="false">%1$s diklik</string>>
 
 </resources>

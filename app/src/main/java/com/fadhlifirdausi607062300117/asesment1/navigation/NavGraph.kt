@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.fadhlifirdausi607062300117.asesment1.ui.screen.HelpScreen
+import com.fadhlifirdausi607062300117.asesment1.ui.screen.HydrationScreen
 import com.fadhlifirdausi607062300117.asesment1.ui.screen.MainScreen
 import com.fadhlifirdausi607062300117.asesment1.ui.screen.SettingScreen
 
@@ -20,6 +21,9 @@ fun SetUpNavGraph(navController: NavHostController=rememberNavController()){
         }
         composable(route = Screen.Setting.route) {
             SettingScreen(navController)
+        }
+        composable(route = Screen.Hydration.route) {
+            HydrationScreen(navController)
         }
     }
 }
