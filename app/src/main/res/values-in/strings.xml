@@ -6,4 +6,7 @@
     <string name="setting">Pengaturan</string>
     <string name="notifications">Notifikasi</string>
     <string name="menu">menu</string>
+    <string name="help">tolong</string>
+    <string name="about_app">tentang aplikasi</string>
+    <string name="list_kosong">Tidak ada apa-apa</string>
 </resources>
