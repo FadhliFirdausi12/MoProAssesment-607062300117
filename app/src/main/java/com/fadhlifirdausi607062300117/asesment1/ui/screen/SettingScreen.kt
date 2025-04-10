@@ -61,7 +61,7 @@ fun SettingScreen(navController: NavHostController) {
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             Text(
-                text = "Ini Setting",
+                text = "Ini Setting \n Linggang guli guli watcha linggang gu lingganggu",
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(16.dp)
             )

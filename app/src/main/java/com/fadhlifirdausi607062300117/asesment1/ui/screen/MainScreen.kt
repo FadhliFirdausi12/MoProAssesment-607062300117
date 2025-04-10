@@ -295,8 +295,8 @@ fun ScreenContent(modifier: Modifier = Modifier, navController: NavHostControlle
         Row(modifier = Modifier.fillMaxWidth()) {
             FeatureBox(
                 title = stringResource(id = R.string.hydration),
-                imageRes = R.drawable.green_kiwi, // Ganti dengan resource icon kamu
-                backgroundColor = Color(0xFF2196F3), // Biru
+                imageRes = R.drawable.water_drop,
+                backgroundColor = Color(0xFF2196F3),
                 modifier = Modifier
                     .weight(1f)
                     .padding(8.dp),
@@ -306,8 +306,8 @@ fun ScreenContent(modifier: Modifier = Modifier, navController: NavHostControlle
             )
             FeatureBox(
                 title = "Aktivity",
-                imageRes = R.drawable.orange, // Ganti icon sesuai
-                backgroundColor = Color(0xFF4CAF50), // Hijau
+                imageRes = R.drawable.green_kiwi,
+                backgroundColor = Color(0xFF4CAF50),
                 modifier = Modifier
                     .weight(1f)
                     .padding(8.dp),
@@ -320,7 +320,7 @@ fun ScreenContent(modifier: Modifier = Modifier, navController: NavHostControlle
         Row(modifier = Modifier.fillMaxWidth()) {
             FeatureBox(
                 title = "Mood",
-                imageRes = R.drawable.peach_grape, // Ganti icon sesuai
+                imageRes = R.drawable.orange,
                 backgroundColor = Color(0xFFFFA726), // Oranye
                 modifier = Modifier
                     .weight(1f)
@@ -331,8 +331,8 @@ fun ScreenContent(modifier: Modifier = Modifier, navController: NavHostControlle
             )
             FeatureBox(
                 title = "Health Tips",
-                imageRes = R.drawable.peach_grape, // Ganti icon sesuai
-                backgroundColor = Color(0xFFAB47BC), // Ungu
+                imageRes = R.drawable.peach_grape,
+                backgroundColor = Color(0xFFAB47BC),
                 modifier = Modifier
                     .weight(1f)
                     .padding(8.dp),
