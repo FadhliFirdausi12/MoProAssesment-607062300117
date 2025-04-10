@@ -111,7 +111,8 @@ fun HydrationScreen(navController: NavHostController) {
                         val weight = weightInput.toIntOrNull()
                         if (weight != null && activityLevel.isNotEmpty()) {
                             val water = calculateWaterNeed(weight, activityLevel.lowercase())
-                            result = context.getString(R.string.result_message, weight, activityLevel, water)
+                            val activityLabel = getActivityLabel(context, activityLevel)
+                            result = context.getString(R.string.result_message, weight, activityLabel, water)
                             weightInt = weight
                             waterNeed = water
                             errorMessage = ""
