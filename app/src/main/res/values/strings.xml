@@ -10,5 +10,26 @@
     <string name="list_kosong">Nothing here</string>
     <string name="hydration">Hydration</string>
     <string name="x_diklik" translatable="false">%1$s diklik</string>>
+    <string name = "share" >Share</string>
+    <string name = "calculate" >Calculate</string>
+    <string name = "back" >Back</string>
+    <string name = "satuan_berat" >Input Your Weight (kg):</string>
+    <string name = "weight" >Weight</string>
+    <string name = "activity_level" >Select Your Activity Level:</string>
+    <string name="activity_light">Light</string>
+    <string name="activity_moderate">Moderate</string>
+    <string name="activity_intense">Intense</string>
+    <string name="error_invalid_weight">Invalid weight</string>
+    <string name="error_empty_activity">Please select an activity level</string>
+    <string name="reset">Reset</string>
+    <string name="result_message">My weight is %1$d kg with %2$s activity,&#10; so my daily water requirement is %3$d ml</string>
+    <string name="share_title">Share result via:</string>
+    <string name="share_message">My weight is %1$d kg with %2$s activity,&#10;
+    so my daily water requirement is %3$d ml.&#10;&#10;How about you?&#10; Go check it out on WellVibe!</string>
+    <string name= "hamburger_menu" >Hamburger Menu</string>
+    <string name= "hero_banner" >Hero Banner</string>
+
+
+
 
 </resources>

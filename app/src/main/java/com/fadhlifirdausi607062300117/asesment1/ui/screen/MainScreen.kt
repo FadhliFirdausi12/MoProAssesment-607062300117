@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
@@ -63,9 +65,11 @@ import kotlinx.coroutines.launch
 fun MainScreen(navController: NavHostController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
 
     ModalNavigationDrawer(
         drawerState = drawerState,
+        gesturesEnabled = false,
         drawerContent = {
             DrawerMenu(drawerState, scope, navController)
         }
@@ -88,14 +92,14 @@ fun MainScreen(navController: NavHostController) {
                         }
                     },
                     colors = TopAppBarDefaults.mediumTopAppBarColors(
-                        containerColor = Color(0xFF2E7D32), // Warna hijau khas aplikasi kesehatan
+                        containerColor = Color(0xFF2E7D32), // Warna hijau BPJS awokwkw
                         titleContentColor = Color.White
                     ),
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
                             Icon(
                                 imageVector = Icons.Default.Menu,
-                                contentDescription = "Hamburger Menu",
+                                contentDescription = stringResource(R.string.hamburger_menu),
                                 tint = Color.White
                             )
                         }
@@ -113,10 +117,17 @@ fun MainScreen(navController: NavHostController) {
                 )
             }
         ) { innerPadding ->
-            Column(modifier = Modifier.padding(innerPadding)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth() // ← penting agar konten tidak menyempit saat scroll
+                    .padding(innerPadding)
+                    .verticalScroll(scrollState)
+            ) {
                 HeroImageBanner()
-                ScreenContent(modifier = Modifier.weight(1f), navController)
-
+                ScreenContent(
+                    modifier = Modifier.fillMaxWidth(),
+                    navController = navController
+                )
             }
         }
     }
@@ -126,11 +137,11 @@ fun MainScreen(navController: NavHostController) {
 fun DrawerMenu(drawerState: DrawerState, scope: CoroutineScope, navController: NavHostController) {
     Column(
         modifier = Modifier
-            .fillMaxHeight() // Full height from top to bottom
-            .width(230.dp) // Width can be adjusted, but let it be 25% of the screen width
-            .background(Color.White) // White background for the drawer
+            .fillMaxHeight()
+            .width(230.dp)
+            .background(Color.White)
     ) {
-        // Back Button to close the drawer
+
         IconButton(
             onClick = { scope.launch { drawerState.close() } },
             modifier = Modifier.padding(top = 20.dp)
@@ -150,13 +161,13 @@ fun DrawerMenu(drawerState: DrawerState, scope: CoroutineScope, navController: N
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = Icons.Default.Info, // Ikon untuk About App
-                contentDescription = "About App",
+                imageVector = Icons.Default.Info,
+                contentDescription = stringResource(id = R.string.about_app),
                 tint = Color.Black
             )
-            Spacer(modifier = Modifier.width(12.dp)) // Jarak antara ikon dan teks
+            Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = "About App",
+                text = stringResource(R.string.about_app),
                 style = MaterialTheme.typography.bodyLarge
             )
         }
@@ -172,13 +183,13 @@ fun DrawerMenu(drawerState: DrawerState, scope: CoroutineScope, navController: N
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = Icons.Default.Search, // Ikon untuk Help
-                contentDescription = "Help",
+                imageVector = Icons.Default.Search,
+                contentDescription = stringResource(id = R.string.help),
                 tint = Color.Black
             )
             Spacer(modifier = Modifier.width(12.dp)) // Jarak antara ikon dan teks
             Text(
-                text = "Help",
+                text = stringResource(id = R.string.help),
                 style = MaterialTheme.typography.bodyLarge
             )
         }
@@ -214,7 +225,7 @@ fun SettingsDropdownMenu(navController: NavHostController) {
                 text = { Text(stringResource(id = R.string.setting)) },
                 onClick = {
                     expanded = false
-                    navController.navigate("settingScreen") // Navigasi ke halaman Settings
+                    navController.navigate("settingScreen")
                 }
             )
         }
@@ -225,11 +236,11 @@ fun SettingsDropdownMenu(navController: NavHostController) {
 fun HeroImageBanner() {
     BoxWithConstraints {
         val screenWidth = maxWidth
-        val aspectRatio = 578f / 1262f // Rasio asli gambar kamu (tinggi / lebar)
+        val aspectRatio = 578f / 1262f // Rasio asli gambar kamu (tinggi / lebar) di ingat bro pls
 
         Image(
             painter = painterResource(id = R.drawable.hero_image),
-            contentDescription = "Hero Banner",
+            contentDescription = stringResource(id = R.string.hero_banner),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .width(screenWidth)

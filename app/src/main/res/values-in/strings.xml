@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">asesment1</string>
+    <string name="app_name">WellVibe</string>
     <string name="title_description">Tetap sehat, Tetap Bahagia</string>
     <string name="profile">Profile</string>
     <string name="setting">Pengaturan</string>
     <string name="notifications">Notifikasi</string>
-    <string name="menu">menu</string>
-    <string name="help">tolong</string>
-    <string name="about_app">tentang aplikasi</string>
+    <string name="menu">Menu</string>
+    <string name="help">Bantuan</string>
+    <string name="about_app">Tentang Aplikasi</string>
     <string name="list_kosong">Tidak ada apa-apa</string>
     <string name="hydration">Hidrasi</string>
+    <string name="share">Bagikan</string>
+    <string name="calculate">Hitung</string>
+    <string name="back">Kembali</string>
+    <string name="satuan_berat">Masukkan berat badan  mu</string>
+    <string name="weight">Berat Badan</string>
+    <string name="activity_level">Pilih Tingkat Aktivitas:</string>
+    <string name="activity_light">Ringan</string>
+    <string name="activity_moderate">Sedang</string>
+    <string name="activity_intense">Berat</string>
+    <string name="error_invalid_weight">Berat Badan tidak valid</string>
+    <string name="error_empty_activity">Tolong pilih tingkat Activitas</string>
+    <string name="reset">Atur Ulang</string>
+    <string name="result_message">Berat badan Saya adalah %1$d kg dengan aktivitas %2$s,&#10;jadi kebutuhan air harian Saya adalah %3$d ml</string>
+    <string name="share_title">Bagikan  hasil via</string>
+    <string name="share_message">Berat badan saya %1$d kg dengan aktivitas %2$s,&#10; jadi kebutuhan air harian saya adalah %3$d ml.&#10;&#10;Bagaimana dengan Anda?&#10;coba lihat di WellVibe!</string>
+    <string name="hamburger_menu">Menu roti lapis buatan Amerika</string>
+    <string name="hero_banner">Hero Banner</string>
 </resources>
