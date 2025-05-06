@@ -98,17 +98,20 @@ fun NotesDetailScreen(navController: NavHostController, id: Long? = null) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back),
-                            tint = MaterialTheme.colorScheme.primary
+                            tint = Color.White
+
                         )
                     }
                 },
                 title = {
                     Text(
-                        text = if (id == null) stringResource(R.string.add_notes) else stringResource(R.string.edit_notes)
+                        text = if (id == null) stringResource(R.string.add_notes) else stringResource(R.string.edit_notes),
+                        color = Color.White
+
                     )
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    containerColor = Color(0xFF2E7D32),
                     titleContentColor = MaterialTheme.colorScheme.primary
                 ),
                 actions = {
@@ -127,7 +130,7 @@ fun NotesDetailScreen(navController: NavHostController, id: Long? = null) {
                         Icon(
                             imageVector = Icons.Filled.Check,
                             contentDescription = stringResource(R.string.save),
-                            tint = MaterialTheme.colorScheme.primary
+                            tint = Color.White
                         )
                     }
                     if (id != null) {
@@ -284,7 +287,7 @@ fun DeleteAction(onDelete: () -> Unit) {
         Icon(
             imageVector = Icons.Filled.MoreVert,
             contentDescription = stringResource(R.string.other),
-            tint = MaterialTheme.colorScheme.primary
+            tint = Color.White
         )
         DropdownMenu(
             expanded = expanded,

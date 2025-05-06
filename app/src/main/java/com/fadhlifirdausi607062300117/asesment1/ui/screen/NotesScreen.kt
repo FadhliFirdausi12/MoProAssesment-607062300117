@@ -90,6 +90,8 @@ fun NotesScreen(navController: NavHostController) {
         },
         floatingActionButton = {
             FloatingActionButton(
+                containerColor = Color(0xFF2E7D32),
+                contentColor = Color.White,
                 onClick = {
                     navController.navigate(Screen.NotesBaru.route)
                 }
