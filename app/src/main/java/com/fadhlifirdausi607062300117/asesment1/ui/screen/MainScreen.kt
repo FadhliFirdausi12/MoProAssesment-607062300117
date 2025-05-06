@@ -319,14 +319,14 @@ fun ScreenContent(modifier: Modifier = Modifier, navController: NavHostControlle
 
         Row(modifier = Modifier.fillMaxWidth()) {
             FeatureBox(
-                title = "Mood",
+                title = stringResource(id = R.string.notes),
                 imageRes = R.drawable.orange,
                 backgroundColor = Color(0xFFFFA726), // Oranye
                 modifier = Modifier
                     .weight(1f)
                     .padding(8.dp),
                 onClick = {
-                    navController.navigate("moodScreen")
+                    navController.navigate("notesScreen")
                 }
             )
             FeatureBox(

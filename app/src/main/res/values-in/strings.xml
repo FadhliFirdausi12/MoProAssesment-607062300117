@@ -27,4 +27,21 @@
     <string name="share_message">Berat badan saya %1$d kg dengan aktivitas %2$s,&#10; jadi kebutuhan air harian saya adalah %3$d ml.&#10;&#10;Bagaimana dengan Anda?&#10;coba lihat di WellVibe!</string>
     <string name="hamburger_menu">Menu roti lapis buatan Amerika</string>
     <string name="hero_banner">Hero Banner</string>
+    <string name="notes">Momentum</string>
+    <string name="notes_detail">Detail Momentum</string>
+    <string name="time">Waktu</string>
+    <string name="mood_unknown">Tidak Tahu</string>
+    <string name="add_notes">Tambah Momentum</string>
+    <string name="mood_happy">Senang</string>
+    <string name="mood_neutral">Biasa Saja</string>
+    <string name="mood_sad">Sedih</string>
+    <string name="mood">Suasana Hati</string>
+    <string name="date">Tanggal</string>
+    <string name="edit_notes">Edit Momentum</string>
+    <string name="save">Simpan</string>
+    <string name="delete">Hapus</string>
+    <string name="other">Lainnya</string>
+    <string name="invalid">Gagal</string>
+    <string name="title">Judul</string>
+    <string name="notes_content">Isi content</string>
 </resources>

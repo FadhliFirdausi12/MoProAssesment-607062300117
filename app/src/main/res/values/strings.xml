@@ -9,6 +9,23 @@
     <string name="about_app">About App</string>
     <string name="list_kosong">Nothing here</string>
     <string name="hydration">Hydration</string>
+    <string name="notes">Momentum</string>
+    <string name="notes_detail">Notes Detail</string>
+    <string name="mood_happy">Happy</string>
+    <string name="mood_neutral">Neutral</string>
+    <string name="mood_sad">Sad</string>
+    <string name="mood">Mood</string>
+    <string name="date">Date</string>
+    <string name="time">Time</string>
+    <string name="mood_unknown">Unknown</string>
+    <string name="add_notes">Add Momentum</string>">
+    <string name="edit_notes">Edit Momentum</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="other">Other</string>
+    <string name="invalid">Invalid</string>
+    <string name="title">Title</string>
+    <string name="notes_content">Notes Content</string>
     <string name="x_diklik" translatable="false">%1$s diklik</string>>
     <string name = "share" >Share</string>
     <string name = "calculate" >Calculate</string>
