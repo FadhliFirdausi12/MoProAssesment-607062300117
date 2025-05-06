@@ -48,6 +48,7 @@ fun NotesDetailScreen(navController: NavHostController, id: Long? = null) {
     val viewModel: DetailViewModel = viewModel(factory = factory)
 
 
+
     var judul by rememberSaveable { mutableStateOf("") }
     var catatan by rememberSaveable { mutableStateOf("") }
     var mood by rememberSaveable { mutableStateOf("") }

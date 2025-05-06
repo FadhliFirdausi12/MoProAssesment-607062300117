@@ -33,10 +33,15 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -56,6 +61,9 @@ import com.fadhlifirdausi607062300117.asesment1.util.ViewModelFactory
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun NotesScreen(navController: NavHostController) {
+    var showList by remember { mutableStateOf(true) }
+
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -77,10 +85,14 @@ fun NotesScreen(navController: NavHostController) {
                     titleContentColor = Color.White
                 ),
                 actions = {
-                    IconButton(onClick = { /* TODO: Tambahkan aksi notifikasi */ }) {
+                    IconButton(onClick = { showList=!showList }) {
                         Icon(
-                            imageVector = Icons.Default.Notifications,
-                            contentDescription = "Notifications",
+                            painter = painterResource(
+                                id = if (showList) R.drawable.baseline_grid_view_24 else R.drawable.baseline_view_list_24
+                            ),
+                            contentDescription = stringResource(
+                                id = if (showList) R.string.grid else R.string.list
+                            ),
                             tint = Color.White
                         )
                     }

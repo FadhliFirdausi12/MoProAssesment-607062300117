@@ -30,6 +30,7 @@
     <string name="notes">Momentum</string>
     <string name="notes_detail">Detail Momentum</string>
     <string name="time">Waktu</string>
+    <string name="grid">Tampilan Petak</string>
     <string name="mood_unknown">Tidak Tahu</string>
     <string name="add_notes">Tambah Momentum</string>
     <string name="mood_happy">Senang</string>
@@ -46,4 +47,5 @@
     <string name="invalid">Gagal</string>
     <string name="title">Judul</string>
     <string name="notes_content">Isi content</string>
+    <string name="list">Tampilan Daftar</string>
 </resources>

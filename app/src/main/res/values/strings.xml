@@ -17,6 +17,8 @@
     <string name="mood">Mood</string>
     <string name="date">Date</string>
     <string name="time">Time</string>
+    <string name="list">List Display</string>
+    <string name="grid">Grid Display</string>
     <string name="mood_unknown">Unknown</string>
     <string name="add_notes">Add Momentum</string>">
     <string name="edit_notes">Edit Momentum</string>
