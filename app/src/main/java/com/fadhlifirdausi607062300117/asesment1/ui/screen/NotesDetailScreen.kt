@@ -53,6 +53,7 @@ fun NotesDetailScreen(navController: NavHostController, id: Long? = null) {
     var mood by rememberSaveable { mutableStateOf("") }
     var tanggal by rememberSaveable { mutableStateOf("") }
     var isDataLoaded by rememberSaveable { mutableStateOf(false) }
+    var showDialog by rememberSaveable { mutableStateOf(false) }
     val data by viewModel.data.collectAsState()
 
     // ADDED: Load data when screen first appears or id changes
@@ -135,8 +136,7 @@ fun NotesDetailScreen(navController: NavHostController, id: Long? = null) {
                     }
                     if (id != null) {
                         DeleteAction {
-                            viewModel.deleteNote(id)
-                            navController.popBackStack()
+                            showDialog = true
                         }
                     }
                 }
@@ -154,6 +154,16 @@ fun NotesDetailScreen(navController: NavHostController, id: Long? = null) {
             onTanggalChange = { tanggal = it },
             modifier = Modifier.padding(padding)
         )
+
+        if (id != null && showDialog) {
+            DisplayAlertDialog(
+                onDismissRequest = { showDialog = false }) {
+                showDialog = false
+                viewModel.deleteNote(id)
+                navController.popBackStack()
+
+            }
+        }
 
     }
 }

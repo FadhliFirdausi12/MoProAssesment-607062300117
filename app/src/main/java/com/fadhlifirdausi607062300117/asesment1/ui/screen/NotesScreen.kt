@@ -194,11 +194,11 @@ fun ListItem(notes: Notes, onClick: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "📅 ${notes.tanggal.take(10)}", // ambil hanya tanggal
+                    text = "📅 ${notes.tanggal.take(10)}",
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = "🕒 ${notes.waktu.takeLast(8)}", // ambil jam
+                    text = "🕒 ${notes.waktu.takeLast(8)}",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
