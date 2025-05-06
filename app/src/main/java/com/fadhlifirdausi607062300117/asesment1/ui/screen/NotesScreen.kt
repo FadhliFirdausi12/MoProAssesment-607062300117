@@ -1,7 +1,6 @@
 package com.fadhlifirdausi607062300117.asesment1.ui.screen
 
 import android.content.res.Configuration
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,11 +20,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -39,9 +36,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -61,12 +55,17 @@ import com.fadhlifirdausi607062300117.asesment1.database.NotesDb
 import com.fadhlifirdausi607062300117.asesment1.model.Notes
 import com.fadhlifirdausi607062300117.asesment1.navigation.Screen
 import com.fadhlifirdausi607062300117.asesment1.ui.theme.Asesment1Theme
+import com.fadhlifirdausi607062300117.asesment1.util.SettingsDataStore
 import com.fadhlifirdausi607062300117.asesment1.util.ViewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun NotesScreen(navController: NavHostController) {
-    var showList by remember { mutableStateOf(true) }
+    val dataStore = SettingsDataStore(LocalContext.current)
+    val showList by dataStore.layoutFlow.collectAsState(initial = true)
 
 
     Scaffold(
@@ -90,7 +89,11 @@ fun NotesScreen(navController: NavHostController) {
                     titleContentColor = Color.White
                 ),
                 actions = {
-                    IconButton(onClick = { showList=!showList }) {
+                    IconButton(onClick = {
+                        CoroutineScope(Dispatchers.IO).launch{
+                            dataStore.saveLayout(!showList)
+                        }
+                    }) {
                         Icon(
                             painter = painterResource(
                                 id = if (showList) R.drawable.baseline_grid_view_24 else R.drawable.baseline_view_list_24
