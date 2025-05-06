@@ -1,6 +1,7 @@
 package com.fadhlifirdausi607062300117.asesment1.ui.screen
 
 import android.content.res.Configuration
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -21,6 +25,7 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -117,12 +122,12 @@ fun NotesScreen(navController: NavHostController) {
             }
         }
     ) { innerPadding ->
-        NotesScreenContent(modifier = Modifier.padding(innerPadding), navController)
+        NotesScreenContent(showList, modifier = Modifier.padding(innerPadding), navController)
     }
 }
 
 @Composable
-fun NotesScreenContent(modifier: Modifier = Modifier, navController: NavHostController){
+fun NotesScreenContent(showList: Boolean,modifier: Modifier = Modifier, navController: NavHostController){
     val context = LocalContext.current
     val db = NotesDb.getInstance(context)
     val factory = ViewModelFactory(db.dao)
@@ -139,18 +144,36 @@ fun NotesScreenContent(modifier: Modifier = Modifier, navController: NavHostCont
         }
 
     }else{
-        LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(bottom = 84.dp),
-    ){
-        items(data){
-            ListItem(notes = it){
-                navController.navigate(Screen.NotesDetail.withId(it.id))
+        if (showList) {
+            LazyColumn(
+                modifier = modifier.fillMaxSize(),
+                contentPadding = PaddingValues(bottom = 84.dp),
+            ) {
+                items(data) {
+                    ListItem(notes = it) {
+                        navController.navigate(Screen.NotesDetail.withId(it.id))
+                    }
+                    HorizontalDivider()
+                }
+
             }
-            HorizontalDivider()
+        }else{
+            LazyVerticalStaggeredGrid(
+                modifier = modifier.fillMaxSize(),
+                columns = StaggeredGridCells.Fixed(2),
+                verticalItemSpacing = 8.dp,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(8.dp, 8.dp, 8.dp, 84.dp),
+            ) {
+                items(data) {
+                    GridItem(notes = it) {
+                        navController.navigate(Screen.NotesDetail.withId(it.id))
+                    }
+                }
+            }
+
         }
 
-    }
     }
 
 
@@ -218,6 +241,66 @@ fun ListItem(notes: Notes, onClick: () -> Unit) {
     }
 }
 
+@Composable
+fun GridItem(notes: Notes, onClick: () -> Unit) {
+    val moodEmoji = when (notes.mood.lowercase()) {
+        "senang", "happy" -> "😊"
+        "biasa saja", "neutral" -> "😐"
+        "buruk", "sad" -> "😢"
+        else -> "📝"
+    }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .clickable { onClick() },
+        elevation = CardDefaults.cardElevation(4.dp),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = notes.judul,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(text = moodEmoji, fontSize = 20.sp)
+            }
+
+            Text(
+                text = notes.catatan,
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = 4,
+                overflow = TextOverflow.Ellipsis
+            )
+
+            Divider(color = Color.Gray.copy(alpha = 0.3f))
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                Text(
+                    text = "📅 ${notes.tanggal.take(10)}",
+                    style = MaterialTheme.typography.labelSmall
+                )
+                Text(
+                    text = "🕒 ${notes.waktu.takeLast(8)}",
+                    style = MaterialTheme.typography.labelSmall
+                )
+            }
+        }
+    }
+}
 
 
 
