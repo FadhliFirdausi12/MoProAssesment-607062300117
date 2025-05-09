@@ -184,10 +184,12 @@ fun NotesScreenContent(showList: Boolean,modifier: Modifier = Modifier, navContr
 
 @Composable
 fun ListItem(notes: Notes, onClick: () -> Unit) {
-    val moodEmoji = when (notes.mood.lowercase()) {
-        "senang", "happy" -> "😊"
-        "biasa saja", "neutral" -> "😐"
-        "buruk", "sad" -> "😢"
+    val normalizedMood = notes.mood.lowercase().replace("\\s".toRegex(), "").trim()
+
+    val moodEmoji = when {
+        normalizedMood.contains("senang") || normalizedMood.contains("happy") -> "😊"
+        normalizedMood.contains("biasa") || normalizedMood.contains("neutral") -> "😐"
+        normalizedMood.contains("sedih") || normalizedMood.contains("sad") -> "😢"
         else -> "📝"
     }
 
@@ -246,7 +248,7 @@ fun ListItem(notes: Notes, onClick: () -> Unit) {
 
 @Composable
 fun GridItem(notes: Notes, onClick: () -> Unit) {
-    val moodEmoji = when (notes.mood.lowercase()) {
+    val moodEmoji = when (notes.mood.lowercase().trim()) {
         "senang", "happy" -> "😊"
         "biasa saja", "neutral" -> "😐"
         "sedih", "sad" -> "😢"
