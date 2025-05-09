@@ -118,7 +118,7 @@ fun NotesDetailScreen(navController: NavHostController, id: Long? = null) {
                 ),
                 actions = {
                     IconButton(onClick = {
-                        if (judul.isBlank() || catatan.isBlank()) {
+                        if (judul.isBlank() || catatan.isBlank() || tanggal.isBlank() || mood.isBlank()) {
                             Toast.makeText(context, R.string.invalid, Toast.LENGTH_SHORT).show()
                             return@IconButton
                         }

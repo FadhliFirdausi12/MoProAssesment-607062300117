@@ -27,7 +27,7 @@
     <string name="delete">Delete</string>
     <string name="other">Other</string>
     <string name="cancel">Cancel</string>
-    <string name="invalid">Invalid</string>
+    <string name="invalid">Invalid pleas fill all field</string>
     <string name="title">Title</string>
     <string name="notes_content">Notes Content</string>
     <string name="x_diklik" translatable="false">%1$s diklik</string>>

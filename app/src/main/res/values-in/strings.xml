@@ -44,7 +44,7 @@
     <string name="delete">Hapus</string>
     <string name="other">Lainnya</string>
     <string name="cancel">Batal</string>
-    <string name="invalid">Gagal</string>
+    <string name="invalid">Gagal tolong isi semua bagian</string>
     <string name="title">Judul</string>
     <string name="notes_content">Isi content</string>
     <string name="list">Tampilan Daftar</string>
