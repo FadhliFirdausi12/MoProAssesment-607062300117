@@ -249,7 +249,7 @@ fun GridItem(notes: Notes, onClick: () -> Unit) {
     val moodEmoji = when (notes.mood.lowercase()) {
         "senang", "happy" -> "😊"
         "biasa saja", "neutral" -> "😐"
-        "buruk", "sad" -> "😢"
+        "sedih", "sad" -> "😢"
         else -> "📝"
     }
 

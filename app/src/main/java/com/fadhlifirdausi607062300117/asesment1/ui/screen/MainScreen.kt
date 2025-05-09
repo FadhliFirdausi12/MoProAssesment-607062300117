@@ -21,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DrawerState
@@ -39,6 +38,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,6 +48,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -57,12 +58,17 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.fadhlifirdausi607062300117.asesment1.R
 import com.fadhlifirdausi607062300117.asesment1.ui.theme.Asesment1Theme
+import com.fadhlifirdausi607062300117.asesment1.util.SettingsDataStore
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(navController: NavHostController) {
+    val context = LocalContext.current
+    val dataStore = SettingsDataStore(context)
+    val isDarkTheme by dataStore.themeFlow.collectAsState(initial = false)
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
@@ -105,12 +111,17 @@ fun MainScreen(navController: NavHostController) {
                         }
                     },
                     actions = {
-                        IconButton(onClick = { /* TODO: Tambahkan aksi notifikasi */ }) {
+                        IconButton(onClick = {
+                            CoroutineScope(Dispatchers.IO).launch {
+                            dataStore.saveTheme(!isDarkTheme)
+                        }
+                        }) {
                             Icon(
-                                imageVector = Icons.Default.Notifications,
-                                contentDescription = stringResource(id = R.string.notifications),
-                                tint = Color.White
+                                painter = painterResource(id = R.drawable.baseline_brush_24),
+                                contentDescription = "Ganti Tema",
+                                tint = MaterialTheme.colorScheme.primary
                             )
+
                         }
                         SettingsDropdownMenu(navController)
                     }
@@ -320,7 +331,7 @@ fun ScreenContent(modifier: Modifier = Modifier, navController: NavHostControlle
         Row(modifier = Modifier.fillMaxWidth()) {
             FeatureBox(
                 title = stringResource(id = R.string.notes),
-                imageRes = R.drawable.orange,
+                imageRes = R.drawable.running30,
                 backgroundColor = Color(0xFFFFA726), // Oranye
                 modifier = Modifier
                     .weight(1f)
