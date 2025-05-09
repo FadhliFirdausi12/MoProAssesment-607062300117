@@ -191,6 +191,7 @@ fun ListItem(notes: Notes, onClick: () -> Unit) {
         normalizedMood.contains("biasa") || normalizedMood.contains("neutral") -> "😐"
         normalizedMood.contains("sedih") || normalizedMood.contains("sad") -> "😢"
         else -> "📝"
+
     }
 
     Card(
