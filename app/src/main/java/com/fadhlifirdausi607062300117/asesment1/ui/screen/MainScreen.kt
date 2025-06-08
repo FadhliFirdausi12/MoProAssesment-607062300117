@@ -316,14 +316,14 @@ fun ScreenContent(modifier: Modifier = Modifier, navController: NavHostControlle
                 }
             )
             FeatureBox(
-                title = "Aktivity",
+                title = stringResource(id = R.string.healthy_recipes),
                 imageRes = R.drawable.green_kiwi,
                 backgroundColor = Color(0xFF4CAF50),
                 modifier = Modifier
                     .weight(1f)
                     .padding(8.dp),
                 onClick = {
-                    navController.navigate("activityScreen")
+                    navController.navigate("recipesScreen")
                 }
             )
         }

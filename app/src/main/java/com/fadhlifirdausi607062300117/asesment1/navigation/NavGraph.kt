@@ -14,6 +14,7 @@ import com.fadhlifirdausi607062300117.asesment1.ui.screen.MainScreen
 import com.fadhlifirdausi607062300117.asesment1.ui.screen.NotesDetailScreen
 import com.fadhlifirdausi607062300117.asesment1.ui.screen.SettingScreen
 import com.fadhlifirdausi607062300117.asesment1.ui.screen.KEY_NOTES_ID
+import com.fadhlifirdausi607062300117.asesment1.ui.screen.RecipesScreen
 
 @Composable
 fun SetUpNavGraph(navController: NavHostController = rememberNavController()) {
@@ -52,5 +53,10 @@ fun SetUpNavGraph(navController: NavHostController = rememberNavController()) {
             val id = navBackStackEntry.arguments?.getLong(KEY_NOTES_ID)
             NotesDetailScreen(navController, id)
         }
+
+        composable(route = Screen.Recipes.route) {
+            RecipesScreen(navController)
+        }
+
     }
 }

@@ -9,6 +9,7 @@ sealed class Screen(val route: String) {
     data object Help : Screen("helpScreen")
     data object Hydration : Screen("hydrationScreen")
     data object Notes : Screen("notesScreen")
+    data object Recipes : Screen("recipesScreen")
 
     // Route untuk menambahkan catatan baru (tanpa parameter)
     data object NotesBaru : Screen("notesDetailScreen")
@@ -16,6 +17,8 @@ sealed class Screen(val route: String) {
     // Route untuk mengedit/melihat catatan berdasarkan ID
     data object NotesDetail : Screen("notesDetailScreen/{$KEY_NOTES_ID}"){
         fun withId(id:Long) = "notesDetailScreen/$id"
+
+
 
     }
 }
