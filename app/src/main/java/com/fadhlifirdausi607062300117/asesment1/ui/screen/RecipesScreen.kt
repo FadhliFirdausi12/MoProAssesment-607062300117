@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -106,11 +107,17 @@ fun ListItem(recipes: Recipes) {
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(RecipesApi.getRecipesUrl(recipes.imageId))
+                .data(
+//                    if (recipes.nama=="Ayam")
+//                        RecipesApi.getRecipesUrl("not-found")
+//                    else
+                    RecipesApi.getRecipesUrl(recipes.imageId))
                 .crossfade(true)
                 .build(),
-            contentDescription = recipes.name,
+            contentDescription = recipes.nama,
             contentScale = ContentScale.Crop,
+            placeholder = painterResource(R.drawable.loading_img),
+            error = painterResource(R.drawable.broken_img),
             modifier = Modifier.fillMaxWidth().padding(4.dp)
         )
         Column(
@@ -118,12 +125,12 @@ fun ListItem(recipes: Recipes) {
                 .background(Color(red=0f, green = 0f, blue = 0f, alpha = 0.5f))
                 .padding(4.dp),
         ) {
-            Text(text = recipes.name,
+            Text(text = recipes.nama,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
             Text(
-                text = recipes.ingridients,
+                text = recipes.namaLatin,
                 fontStyle = FontStyle.Italic,
                 fontSize = 14.sp,
                 color = Color.White
