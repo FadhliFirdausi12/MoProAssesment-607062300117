@@ -83,7 +83,6 @@ fun RecipesScreen(navController: NavHostController) {
                             tint = Color.White
                         )
                     }
-                    SettingsDropdownMenu(navController)
                 }
             )
         }

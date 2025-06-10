@@ -63,7 +63,6 @@ fun HelpScreen(navController: NavHostController) {
                             tint = Color.White
                         )
                     }
-                    SettingsDropdownMenu(navController)
                 }
             )
         }

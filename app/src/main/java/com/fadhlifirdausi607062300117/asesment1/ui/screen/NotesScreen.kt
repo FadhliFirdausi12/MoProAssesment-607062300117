@@ -104,7 +104,7 @@ fun NotesScreen(navController: NavHostController) {
                             tint = Color.White
                         )
                     }
-                    SettingsDropdownMenu(navController)
+
                 }
             )
         },

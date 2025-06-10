@@ -54,7 +54,6 @@ fun SettingScreen(navController: NavHostController) {
                             tint = Color.White
                         )
                     }
-                    SettingsDropdownMenu(navController)
                 }
             )
         }

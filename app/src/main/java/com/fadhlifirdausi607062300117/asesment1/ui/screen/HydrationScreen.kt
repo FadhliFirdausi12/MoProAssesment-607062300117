@@ -79,7 +79,6 @@ fun HydrationScreen(navController: NavHostController) {
                     }
                 },
                 actions = {
-                    SettingsDropdownMenu(navController)
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(containerColor = Color(0xFF2E7D32))
             )
