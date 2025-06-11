@@ -65,6 +65,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.fadhlifirdausi607062300117.asesment1.BuildConfig
 import com.fadhlifirdausi607062300117.asesment1.R
+import com.fadhlifirdausi607062300117.asesment1.model.User
+import com.fadhlifirdausi607062300117.asesment1.network.UserDataStore
 import com.fadhlifirdausi607062300117.asesment1.ui.theme.Asesment1Theme
 import com.fadhlifirdausi607062300117.asesment1.util.SettingsDataStore
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -83,6 +85,9 @@ fun MainScreen(navController: NavHostController) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
+    val dataStoreUser = UserDataStore(context)
+
+
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -134,7 +139,7 @@ fun MainScreen(navController: NavHostController) {
                             )
 
                         }
-                        SettingsDropdownMenu(navController, context)
+                        SettingsDropdownMenu(navController, context, dataStoreUser)
                     }
                 )
             }
@@ -220,8 +225,9 @@ fun DrawerMenu(drawerState: DrawerState, scope: CoroutineScope, navController: N
 
 
 @Composable
-fun SettingsDropdownMenu(navController: NavHostController, context: Context) {
+fun SettingsDropdownMenu(navController: NavHostController, context: Context, dataStoreUser: UserDataStore) {
     var expanded by remember { mutableStateOf(false) }
+    val user by dataStoreUser.userFlow.collectAsState(User("", "", ""))
 
     Box {
         IconButton(onClick = { expanded = true }) {
@@ -240,15 +246,18 @@ fun SettingsDropdownMenu(navController: NavHostController, context: Context) {
                 text = { Text(stringResource(id = R.string.profile)) },
                 onClick = {
                     expanded = false
-                    // TODO: Navigasi ke halaman Profile jika ada
-                    CoroutineScope(Dispatchers.IO).launch { signIn(context) }
+                    if(user.email.isEmpty()){
+                        CoroutineScope(Dispatchers.IO).launch{signIn(context, dataStoreUser)}
+                    }else{
+                        Log.d("SIGN-IN", "User:$user")
+                    }
                 }
             )
             DropdownMenuItem(
                 text = { Text(stringResource(id = R.string.setting)) },
                 onClick = {
                     expanded = false
-                    navController.navigate("settingScreen")
+
                 }
             )
         }
@@ -367,7 +376,7 @@ fun ScreenContent(modifier: Modifier = Modifier, navController: NavHostControlle
     }
 }
 
-private suspend fun signIn(context: Context) {
+private suspend fun signIn(context: Context, dataStoreUser: UserDataStore) {
     val googleIdOption: GetGoogleIdOption = GetGoogleIdOption.Builder()
         .setFilterByAuthorizedAccounts(false)
         .setServerClientId(BuildConfig.API_KEY)
@@ -380,21 +389,25 @@ private suspend fun signIn(context: Context) {
     try {
         val credentialManager = CredentialManager.create(context)
         val result = credentialManager.getCredential(context, request)
-        handleSignIn(result)
+        handleSignIn(result, dataStoreUser)
     } catch (e: GetCredentialException) {
         Log.e("SIGN-IN", "Error: ${e.errorMessage}")
     }
 }
 
 private suspend fun handleSignIn(
-    result: GetCredentialResponse
+    result: GetCredentialResponse,
+    dataStoreUser: UserDataStore
 ) {
     val credential = result.credential
     if (credential is CustomCredential &&
         credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
         try {
             val googleId = GoogleIdTokenCredential.createFrom(credential.data)
-            Log.d("SIGN-IN", "User email: ${googleId.id}")
+            val name=googleId.givenName?:""
+            val email=googleId.id
+            val photoUrl=googleId.profilePictureUri.toString()
+            dataStoreUser.saveData(User(name,email,photoUrl))
         } catch (e: GoogleIdTokenParsingException) {
             Log.e("SIGN-IN", "Error: ${e.message}")
         }
