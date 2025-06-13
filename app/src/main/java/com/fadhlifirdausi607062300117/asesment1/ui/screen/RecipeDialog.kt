@@ -33,7 +33,7 @@ import com.fadhlifirdausi607062300117.asesment1.R
 import com.fadhlifirdausi607062300117.asesment1.ui.theme.Asesment1Theme
 
 @Composable
-fun HewanDialog(
+fun RecipesDialog(
     bitmap: Bitmap?,
     onDismissRequest: () -> Unit,
     onConfirmation: (String, String) -> Unit
@@ -110,7 +110,7 @@ fun HewanDialog(
 @Composable
 fun AddDialogPreview() {
     Asesment1Theme {
-        HewanDialog(
+        RecipesDialog(
             bitmap = null,
             onDismissRequest = {  },
             onConfirmation = {_, _->  }

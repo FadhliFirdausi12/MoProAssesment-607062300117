@@ -7,6 +7,7 @@ import android.graphics.ImageDecoder
 import android.os.Build
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -64,21 +65,28 @@ import com.canhub.cropper.CropImageOptions
 import com.canhub.cropper.CropImageView
 import com.fadhlifirdausi607062300117.asesment1.R
 import com.fadhlifirdausi607062300117.asesment1.model.Recipes
+import com.fadhlifirdausi607062300117.asesment1.model.User
 import com.fadhlifirdausi607062300117.asesment1.network.ApiStatus
 import com.fadhlifirdausi607062300117.asesment1.network.RecipesApi
+import com.fadhlifirdausi607062300117.asesment1.network.UserDataStore
 import com.fadhlifirdausi607062300117.asesment1.ui.theme.Asesment1Theme
 
 
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun RecipesScreen(navController: NavHostController) {
-    var showRecipeDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
+    val dataStoreUser = UserDataStore(context)
+    var showRecipeDialog by remember { mutableStateOf(false) }
     var bitmap : Bitmap?  by remember { mutableStateOf(null) }
     val launcher = rememberLauncherForActivityResult(CropImageContract()) {
         bitmap = getCroppedImage(context.contentResolver, it)
         if (bitmap != null) showRecipeDialog = true
     }
+    val viewModel : MainViewModelRecipes = viewModel()
+    val user by dataStoreUser.userFlow.collectAsState(initial = User("", "", ""))
+    val errorMessage by viewModel.errorMessage
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -128,22 +136,26 @@ fun RecipesScreen(navController: NavHostController) {
             }
         }
     ) { innerPadding ->
-        ScreenContent(modifier = Modifier.padding(innerPadding))
+        ScreenContent(viewModel, modifier = Modifier.padding(innerPadding))
         if (showRecipeDialog) {
-            HewanDialog(
+            RecipesDialog(
                 bitmap = bitmap,
                 onDismissRequest = { showRecipeDialog = false })
                  {
-                 nama, namaLatin -> Log.d("Tambah", "$nama $namaLatin ditambahkan")
+                 nama, namaLatin -> viewModel.saveData(user.email, nama, namaLatin, bitmap!!)
                 showRecipeDialog = false
             }
+        }
+        if (errorMessage != null) {
+            Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
+            viewModel.clearMessage()
         }
     }
 }
 
 @Composable
-fun ScreenContent(modifier: Modifier = Modifier){
-    val viewModel : MainViewModelRecipes = viewModel()
+fun ScreenContent(viewModel:MainViewModelRecipes, modifier: Modifier = Modifier){
+
     val data by viewModel.data
     val status by viewModel.status.collectAsState()
 
