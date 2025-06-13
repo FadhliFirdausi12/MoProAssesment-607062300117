@@ -5,8 +5,10 @@ data class Recipes(
 //val ingridients : String,
 //val steps : String,
 //val userId : String,
+val id : String,
 val imageId : String,
 val nama : String,
-val namaLatin : String
+val namaLatin : String,
+val mine : String
 )
 

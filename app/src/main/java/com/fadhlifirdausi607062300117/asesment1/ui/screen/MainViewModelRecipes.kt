@@ -27,20 +27,20 @@ class MainViewModelRecipes : ViewModel() {
     var errorMessage = mutableStateOf<String?>(null)
         private set
 
-  fun retrievedata(userId: String) {
+    fun retrievedata(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             status.value = ApiStatus.LOADING
             try {
-                data.value = RecipesApi.service.getRecipes(userId)
+                val allData = RecipesApi.service.getRecipes(userId) // Ambil semua data dari API
+                val filteredData = allData.filter { it.mine == "1" } // ✅ Hanya data milik user
+                data.value = filteredData
                 status.value = ApiStatus.SUCCES
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 Log.d("MainViewModelRecipes", "Failure: ${e.message}")
                 status.value = ApiStatus.FAILED
-
             }
         }
     }
-
     fun saveData(userId: String, nama: String, namaLatin: String, bitmap: Bitmap) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -70,6 +70,22 @@ class MainViewModelRecipes : ViewModel() {
             "image/jpg".toMediaTypeOrNull(), 0, byteArray.size)
         return MultipartBody.Part.createFormData(
             "image", "image.jpg", requestBody)
+    }
+
+
+    fun deleteData(userId: String, id: String) { // Ubah parameter id menjadi String
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val result = RecipesApi.service.deleteRecipe(userId, id)
+                if (result.status == "success") {
+                    retrievedata(userId)
+                } else {
+                    errorMessage.value = result.message ?: "Gagal menghapus"
+                }
+            } catch (e: Exception) {
+                errorMessage.value = "Error: ${e.message}"
+            }
+        }
     }
 
 fun clearMessage() {errorMessage.value = null}

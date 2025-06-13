@@ -87,6 +87,8 @@ fun RecipesScreen(navController: NavHostController) {
     val viewModel : MainViewModelRecipes = viewModel()
     val user by dataStoreUser.userFlow.collectAsState(initial = User("", "", ""))
     val errorMessage by viewModel.errorMessage
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var selectedHewanId by remember { mutableStateOf<String?>(null) }
 
     Scaffold(
         topBar = {
@@ -137,7 +139,16 @@ fun RecipesScreen(navController: NavHostController) {
             }
         }
     ) { innerPadding ->
-        ScreenContent(viewModel, user.email, modifier = Modifier.padding(innerPadding))
+//        ScreenContent(viewModel, user.email, modifier = Modifier.padding(innerPadding))
+        ScreenContent(
+            viewModel = viewModel,
+            userId = user.email,
+            modifier = Modifier.padding(innerPadding),
+            onDeleteClick = { id ->
+                selectedHewanId = id
+                showDeleteDialog = true
+            }
+        )
         if (showRecipeDialog) {
             RecipesDialog(
                 bitmap = bitmap,
@@ -147,6 +158,19 @@ fun RecipesScreen(navController: NavHostController) {
                 showRecipeDialog = false
             }
         }
+        if (showDeleteDialog) {
+            DeleteConfirmationDialog(
+                onConfirmDelete = {
+                    selectedHewanId?.let { id ->
+                        viewModel.deleteData(user.email, id)
+                    }
+                    showDeleteDialog = false
+                },
+                onDismiss = {
+                    showDeleteDialog = false
+                }
+            )
+        }
         if (errorMessage != null) {
             Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
             viewModel.clearMessage()
@@ -155,7 +179,8 @@ fun RecipesScreen(navController: NavHostController) {
 }
 
 @Composable
-fun ScreenContent(viewModel:MainViewModelRecipes, userId:String, modifier: Modifier = Modifier){
+fun ScreenContent(viewModel:MainViewModelRecipes, userId:String, modifier: Modifier = Modifier,
+                  onDeleteClick: (String) -> Unit){
 
     val data by viewModel.data
     val status by viewModel.status.collectAsState()
@@ -180,9 +205,15 @@ fun ScreenContent(viewModel:MainViewModelRecipes, userId:String, modifier: Modif
             LazyVerticalGrid(
                 modifier = modifier.fillMaxSize().padding(4.dp),
                 columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(bottom=80.dp)
+                contentPadding = PaddingValues(bottom = 80.dp)
             ) {
-                items(data) { ListItem(recipes = it) }
+                items(data) { recipes ->
+                    Log.d("RecipeScreen", recipes.toString())
+                    ListItem(
+                        recipes = recipes,
+                        onDeleteClick = onDeleteClick
+                    )
+                }
             }
         }
         ApiStatus.FAILED ->{
@@ -205,7 +236,7 @@ fun ScreenContent(viewModel:MainViewModelRecipes, userId:String, modifier: Modif
 }
 
 @Composable
-fun ListItem(recipes: Recipes) {
+fun ListItem(recipes: Recipes, onDeleteClick: (String) -> Unit,) {
     Box(
         modifier = Modifier.padding(4.dp).border(1.dp, Color.Gray),
         contentAlignment = Alignment.BottomCenter
@@ -240,6 +271,17 @@ fun ListItem(recipes: Recipes) {
                 fontSize = 14.sp,
                 color = Color.White
             )
+        }
+        if (recipes.mine == "1" ||recipes.id.trim() == "0") {
+            IconButton(
+                onClick = { onDeleteClick(recipes.id) }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.baseline_delete_24),
+                    contentDescription = "Hapus",
+                    tint = Color.White
+                )
+            }
         }
     }
 }
