@@ -274,7 +274,8 @@ fun ListItem(recipes: Recipes, onDeleteClick: (String) -> Unit,) {
         }
         if (recipes.mine == "1" ||recipes.id.trim() == "0") {
             IconButton(
-                onClick = { onDeleteClick(recipes.id) }
+                onClick = { onDeleteClick(recipes.id) },
+                modifier = Modifier
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.baseline_delete_24),
