@@ -28,7 +28,7 @@ private val retrofit = Retrofit.Builder()
 
 interface HewanApiService {
     @GET("hewan.php")
-    suspend fun getRecipes(): List<Recipes>
+    suspend fun getRecipes(@Header("Authorization") userId: String): List<Recipes>
 
 
     @Multipart

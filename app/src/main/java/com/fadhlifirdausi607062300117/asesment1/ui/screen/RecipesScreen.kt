@@ -37,6 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -136,7 +137,7 @@ fun RecipesScreen(navController: NavHostController) {
             }
         }
     ) { innerPadding ->
-        ScreenContent(viewModel, modifier = Modifier.padding(innerPadding))
+        ScreenContent(viewModel, user.email, modifier = Modifier.padding(innerPadding))
         if (showRecipeDialog) {
             RecipesDialog(
                 bitmap = bitmap,
@@ -154,10 +155,15 @@ fun RecipesScreen(navController: NavHostController) {
 }
 
 @Composable
-fun ScreenContent(viewModel:MainViewModelRecipes, modifier: Modifier = Modifier){
+fun ScreenContent(viewModel:MainViewModelRecipes, userId:String, modifier: Modifier = Modifier){
 
     val data by viewModel.data
     val status by viewModel.status.collectAsState()
+
+    LaunchedEffect(userId) {
+        viewModel.retrievedata(userId)
+    }
+
 
     when (status) {
         ApiStatus.LOADING -> {
@@ -187,7 +193,7 @@ fun ScreenContent(viewModel:MainViewModelRecipes, modifier: Modifier = Modifier)
             ){
                 Text(text= stringResource(id=R.string.error))
                 Button(
-                    onClick = { viewModel.retrievedata() },
+                    onClick = { viewModel.retrievedata(userId) },
                     modifier = Modifier.padding(top=16.dp),
                     contentPadding= PaddingValues(horizontal=32.dp,vertical=16.dp)
                 ){

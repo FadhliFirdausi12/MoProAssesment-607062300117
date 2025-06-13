@@ -27,15 +27,11 @@ class MainViewModelRecipes : ViewModel() {
     var errorMessage = mutableStateOf<String?>(null)
         private set
 
-    init {
-        retrievedata()
-    }
-
-  fun retrievedata() {
+  fun retrievedata(userId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             status.value = ApiStatus.LOADING
             try {
-                data.value = RecipesApi.service.getRecipes()
+                data.value = RecipesApi.service.getRecipes(userId)
                 status.value = ApiStatus.SUCCES
             }catch (e: Exception){
                 Log.d("MainViewModelRecipes", "Failure: ${e.message}")
@@ -56,7 +52,7 @@ class MainViewModelRecipes : ViewModel() {
                 )
 
                 if (result.status == "success")
-                    retrievedata()
+                    retrievedata(userId)
                 else
                     throw Exception(result.message)
             } catch (e: Exception) {
