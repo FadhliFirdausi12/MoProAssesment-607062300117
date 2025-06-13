@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.protolite.well.known.types)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.android.image.cropper)
     ksp(libs.androidx.room.compiler)
     implementation(libs.retrofit)
     implementation(libs.converter.moshi)
