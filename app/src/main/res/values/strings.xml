@@ -52,6 +52,8 @@
     <string name= "healthy_recipes" >Healthy recipes</string>
     <string name="error">Failed to load data... Connection error.</string>
     <string name="try_again">try again</string>
+    <string name="tutup">Close</string>
+    <string name="logout">Logout</string>
 
 
 

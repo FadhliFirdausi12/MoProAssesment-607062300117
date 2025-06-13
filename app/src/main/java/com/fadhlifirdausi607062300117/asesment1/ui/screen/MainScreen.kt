@@ -86,6 +86,8 @@ fun MainScreen(navController: NavHostController) {
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     val dataStoreUser = UserDataStore(context)
+    var showDialog by remember { mutableStateOf(false) }
+    val user by dataStoreUser.userFlow.collectAsState(initial = User("", "", ""))
 
 
 
@@ -139,7 +141,12 @@ fun MainScreen(navController: NavHostController) {
                             )
 
                         }
-                        SettingsDropdownMenu(navController, context, dataStoreUser)
+                        SettingsDropdownMenu(
+                            navController = navController,
+                            context = context,
+                            dataStoreUser = dataStoreUser,
+                            onShowProfile = { showDialog = true }
+                        )
                     }
                 )
             }
@@ -156,6 +163,17 @@ fun MainScreen(navController: NavHostController) {
                     navController = navController
                 )
             }
+            if (showDialog) {
+                ProfilDialog(
+                    user = user,
+                    onDismissRequest = { showDialog = false },
+                    onConfirmation = {
+                        // Misalnya logout atau aksi lainnya
+                        showDialog = false
+                    }
+                )
+            }
+
         }
     }
 }
@@ -225,7 +243,12 @@ fun DrawerMenu(drawerState: DrawerState, scope: CoroutineScope, navController: N
 
 
 @Composable
-fun SettingsDropdownMenu(navController: NavHostController, context: Context, dataStoreUser: UserDataStore) {
+fun SettingsDropdownMenu(
+    navController: NavHostController,
+    context: Context,
+    dataStoreUser: UserDataStore,
+    onShowProfile: () -> Unit
+) {
     var expanded by remember { mutableStateOf(false) }
     val user by dataStoreUser.userFlow.collectAsState(User("", "", ""))
 
@@ -246,10 +269,12 @@ fun SettingsDropdownMenu(navController: NavHostController, context: Context, dat
                 text = { Text(stringResource(id = R.string.profile)) },
                 onClick = {
                     expanded = false
-                    if(user.email.isEmpty()){
-                        CoroutineScope(Dispatchers.IO).launch{signIn(context, dataStoreUser)}
-                    }else{
-                        Log.d("SIGN-IN", "User:$user")
+                    if (user.email.isEmpty()) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            signIn(context, dataStoreUser)
+                        }
+                    } else {
+                        onShowProfile()
                     }
                 }
             )
@@ -257,12 +282,13 @@ fun SettingsDropdownMenu(navController: NavHostController, context: Context, dat
                 text = { Text(stringResource(id = R.string.setting)) },
                 onClick = {
                     expanded = false
-
+                    navController.navigate("settingScreen")
                 }
             )
         }
     }
 }
+
 
 @Composable
 fun HeroImageBanner() {
