@@ -54,4 +54,6 @@
     <string name="tutup">Tutup</string>
     <string name="logout">Logout</string>
     <string name="add_data">Tambah data</string>
+    <string name="name">Nama</string>
+    <string name="description">Deskripsi</string>
 </resources>

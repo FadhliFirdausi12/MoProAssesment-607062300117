@@ -72,11 +72,12 @@ import com.fadhlifirdausi607062300117.asesment1.ui.theme.Asesment1Theme
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun RecipesScreen(navController: NavHostController) {
+    var showRecipeDialog by remember { mutableStateOf(false) }
     val context = LocalContext.current
     var bitmap : Bitmap?  by remember { mutableStateOf(null) }
     val launcher = rememberLauncherForActivityResult(CropImageContract()) {
         bitmap = getCroppedImage(context.contentResolver, it)
-//        if (bitmap != null) showRecipeDialog = true
+        if (bitmap != null) showRecipeDialog = true
     }
     Scaffold(
         topBar = {
@@ -128,6 +129,15 @@ fun RecipesScreen(navController: NavHostController) {
         }
     ) { innerPadding ->
         ScreenContent(modifier = Modifier.padding(innerPadding))
+        if (showRecipeDialog) {
+            HewanDialog(
+                bitmap = bitmap,
+                onDismissRequest = { showRecipeDialog = false })
+                 {
+                 nama, namaLatin -> Log.d("Tambah", "$nama $namaLatin ditambahkan")
+                showRecipeDialog = false
+            }
+        }
     }
 }
 
