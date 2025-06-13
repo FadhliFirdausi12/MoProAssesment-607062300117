@@ -48,7 +48,7 @@
     <string name="title">Judul</string>
     <string name="notes_content">Isi content</string>
     <string name="list">Tampilan Daftar</string>
-    <string name="healthy_recipes">Resep-resep sehat</string>
+    <string name="healthy_recipes">Makananku</string>
     <string name="error">Gagal memuat data... Koneksi error.</string>
     <string name="try_again">Coba lagi</string>
     <string name="tutup">Tutup</string>

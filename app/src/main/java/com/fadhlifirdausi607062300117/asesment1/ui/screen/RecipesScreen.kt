@@ -15,8 +15,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -236,56 +238,66 @@ fun ScreenContent(viewModel:MainViewModelRecipes, userId:String, modifier: Modif
 }
 
 @Composable
-fun ListItem(recipes: Recipes, onDeleteClick: (String) -> Unit,) {
-    Box(
-        modifier = Modifier.padding(4.dp).border(1.dp, Color.Gray),
-        contentAlignment = Alignment.BottomCenter
+fun ListItem(recipes: Recipes, onDeleteClick: (String) -> Unit) {
+    Column(
+        modifier = Modifier
+            .padding(8.dp)
+            .border(1.dp, Color.Gray)
+            .fillMaxWidth()
     ) {
+        // Gambar
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(
-//                    if (recipes.nama=="Ayam")
-//                        RecipesApi.getRecipesUrl("not-found")
-//                    else
-                    RecipesApi.getRecipesUrl(recipes.imageId))
+                .data(RecipesApi.getRecipesUrl(recipes.imageId))
                 .crossfade(true)
                 .build(),
             contentDescription = recipes.nama,
             contentScale = ContentScale.Crop,
             placeholder = painterResource(R.drawable.loading_img),
             error = painterResource(R.drawable.broken_img),
-            modifier = Modifier.fillMaxWidth().padding(4.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp) // Atur tinggi gambar
         )
-        Column(
-            modifier = Modifier.fillMaxWidth().padding(4.dp)
-                .background(Color(red=0f, green = 0f, blue = 0f, alpha = 0.5f))
-                .padding(4.dp),
+
+        // Bagian teks dan tombol
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(text = recipes.nama,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-            Text(
-                text = recipes.namaLatin,
-                fontStyle = FontStyle.Italic,
-                fontSize = 14.sp,
-                color = Color.White
-            )
-        }
-        if (recipes.mine == "1" ||recipes.id.trim() == "0") {
-            IconButton(
-                onClick = { onDeleteClick(recipes.id) },
-                modifier = Modifier
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_delete_24),
-                    contentDescription = "Hapus",
-                    tint = Color.White
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = recipes.nama,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp
                 )
+                Text(
+                    text = recipes.namaLatin,
+                    fontStyle = FontStyle.Italic,
+                    fontSize = 14.sp,
+                    color = Color.DarkGray
+                )
+            }
+
+            // Tombol hapus
+            if (recipes.mine == "1" || recipes.id.trim() == "0") {
+                IconButton(
+                    onClick = { onDeleteClick(recipes.id) }
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_delete_24),
+                        contentDescription = "Hapus",
+                        tint = Color.Red
+                    )
+                }
             }
         }
     }
 }
+
 
 private fun getCroppedImage(
     resolver: ContentResolver,

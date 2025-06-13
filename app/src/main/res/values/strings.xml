@@ -49,7 +49,7 @@
     so my daily water requirement is %3$d ml.&#10;&#10;How about you?&#10; Go check it out on WellVibe!</string>
     <string name= "hamburger_menu" >Hamburger Menu</string>
     <string name= "hero_banner" >Hero Banner</string>
-    <string name= "healthy_recipes" >Healthy recipes</string>
+    <string name= "healthy_recipes" >My Food</string>
     <string name="error">Failed to load data... Connection error.</string>
     <string name="try_again">try again</string>
     <string name="tutup">Close</string>

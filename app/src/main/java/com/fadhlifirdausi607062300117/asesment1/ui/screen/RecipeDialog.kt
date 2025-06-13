@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -73,10 +74,12 @@ fun RecipesDialog(
                     value = namaLatin,
                     onValueChange = { namaLatin = it },
                     label = { Text(stringResource(R.string.description)) },
-                    maxLines = 1,
+                    maxLines = 4,
+                    singleLine = false,
                     keyboardOptions = KeyboardOptions(
                         capitalization = KeyboardCapitalization.Sentences,
-                        imeAction = ImeAction.Done
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Default
                     ),
                     modifier = Modifier.padding(top = 8.dp)
                 )
