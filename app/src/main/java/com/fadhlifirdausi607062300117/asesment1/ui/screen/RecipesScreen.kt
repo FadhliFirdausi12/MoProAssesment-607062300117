@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,11 +24,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
@@ -213,7 +217,12 @@ fun ScreenContent(viewModel:MainViewModelRecipes, userId:String, modifier: Modif
                     Log.d("RecipeScreen", recipes.toString())
                     ListItem(
                         recipes = recipes,
-                        onDeleteClick = onDeleteClick
+                        onDeleteClick = onDeleteClick,
+                        onEditClick = { selectedRecipe ->
+                            // TODO: Tambahkan logika edit di sini nanti
+                            // Contoh log sederhana dulu:
+                            Log.d("EDIT", "Klik edit: ${selectedRecipe.nama}")
+                        }
                     )
                 }
             }
@@ -238,65 +247,83 @@ fun ScreenContent(viewModel:MainViewModelRecipes, userId:String, modifier: Modif
 }
 
 @Composable
-fun ListItem(recipes: Recipes, onDeleteClick: (String) -> Unit) {
-    Column(
+fun ListItem(
+    recipes: Recipes,
+    onDeleteClick: (String) -> Unit,
+    onEditClick: (Recipes) -> Unit // bisa kamu sambungkan nanti
+) {
+    Card(
         modifier = Modifier
             .padding(8.dp)
-            .border(1.dp, Color.Gray)
-            .fillMaxWidth()
+            .fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(12.dp)
     ) {
-        // Gambar
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(RecipesApi.getRecipesUrl(recipes.imageId))
-                .crossfade(true)
-                .build(),
-            contentDescription = recipes.nama,
-            contentScale = ContentScale.Crop,
-            placeholder = painterResource(R.drawable.loading_img),
-            error = painterResource(R.drawable.broken_img),
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp) // Atur tinggi gambar
-        )
+        Column {
+            // Sekat 1: Gambar
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(RecipesApi.getRecipesUrl(recipes.imageId))
+                    .crossfade(true)
+                    .build(),
+                contentDescription = recipes.nama,
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.loading_img),
+                error = painterResource(R.drawable.broken_img),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16f / 9f) // Proporsi modern
+            )
 
-        // Bagian teks dan tombol
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
+            // Sekat 2: Info
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color(0xFFF7F7F7))
+                    .padding(horizontal = 12.dp, vertical = 8.dp)
+            ) {
                 Text(
                     text = recipes.nama,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
                 Text(
                     text = recipes.namaLatin,
-                    fontStyle = FontStyle.Italic,
-                    fontSize = 14.sp,
-                    color = Color.DarkGray
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        fontStyle = FontStyle.Italic,
+                        color = Color.Gray
+                    )
                 )
             }
 
-            // Tombol hapus
+            // Sekat 3: Aksi
             if (recipes.mine == "1" || recipes.id.trim() == "0") {
-                IconButton(
-                    onClick = { onDeleteClick(recipes.id) }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFFFAFAFA))
+                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.End
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.baseline_delete_24),
-                        contentDescription = "Hapus",
-                        tint = Color.Red
-                    )
+                    IconButton(onClick = { onEditClick(recipes) }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_edit_24),
+                            contentDescription = "Edit",
+                            tint = Color(0xFF1976D2)
+                        )
+                    }
+                    IconButton(onClick = { onDeleteClick(recipes.id) }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.baseline_delete_24),
+                            contentDescription = "Hapus",
+                            tint = Color.Red
+                        )
+                    }
                 }
             }
         }
     }
 }
+
 
 
 private fun getCroppedImage(
