@@ -2,6 +2,7 @@ package com.fadhlifirdausi607062300117.asesment1.network
 
 import com.fadhlifirdausi607062300117.asesment1.model.OpStatus
 import com.fadhlifirdausi607062300117.asesment1.model.Recipes
+import com.fadhlifirdausi607062300117.asesment1.model.ResponseApi
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.MultipartBody
@@ -47,6 +48,25 @@ interface HewanApiService {
         @Header("Authorization") userId: String,
         @Query("id") id: String
     ): OpStatus
+
+    @Multipart
+    @POST("update/recipes")
+    suspend fun updateRecipe(
+        @Part("userId") userId: String,
+        @Part("id") id: String,
+        @Part("nama") nama: RequestBody,
+        @Part("namaLatin") namaLatin: RequestBody,
+        @Part image: MultipartBody.Part?
+    ): ResponseApi
+
+    @Multipart
+    @POST("update/recipes-without-image")
+    suspend fun updateRecipeTanpaGambar(
+        @Part("userId") userId: String,
+        @Part("id") id: String,
+        @Part("nama") nama: RequestBody,
+        @Part("namaLatin") namaLatin: RequestBody
+    ): ResponseApi
 }
 
 object RecipesApi{

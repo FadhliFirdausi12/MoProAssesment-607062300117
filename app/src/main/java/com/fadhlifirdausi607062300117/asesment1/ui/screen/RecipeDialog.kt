@@ -36,13 +36,15 @@ import com.fadhlifirdausi607062300117.asesment1.ui.theme.Asesment1Theme
 @Composable
 fun RecipesDialog(
     bitmap: Bitmap?,
+    initialNama: String = "",
+    initialDeskripsi: String = "",
     onDismissRequest: () -> Unit,
     onConfirmation: (String, String) -> Unit
 ) {
-    var nama by remember { mutableStateOf("") }
-    var namaLatin by remember { mutableStateOf("") }
+    var nama by remember { mutableStateOf(initialNama) }
+    var namaLatin by remember { mutableStateOf(initialDeskripsi) }
 
-    Dialog(onDismissRequest = { onDismissRequest() }) {
+    Dialog(onDismissRequest = onDismissRequest) {
         Card(
             modifier = Modifier.padding(16.dp),
             shape = RoundedCornerShape(16.dp),
@@ -51,62 +53,59 @@ fun RecipesDialog(
                 modifier = Modifier.padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Image(
-//                    painter = painterResource(id = R.drawable.broken_img),
-                    bitmap = bitmap!!.asImageBitmap(),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxWidth().aspectRatio(1f),
-
+                bitmap?.let {
+                    Image(
+                        bitmap = it.asImageBitmap(),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(1f)
                     )
+                }
+
                 OutlinedTextField(
                     value = nama,
                     onValueChange = { nama = it },
-                    label = { Text(stringResource(R.string.name)) },
+                    label = { Text("Nama") },
                     maxLines = 1,
-                    keyboardOptions = KeyboardOptions(
-                        capitalization = KeyboardCapitalization.Sentences,
-                        imeAction = ImeAction.Done
-                    ),
+                    keyboardOptions = KeyboardOptions.Default,
                     modifier = Modifier.padding(top = 8.dp)
-
                 )
+
                 OutlinedTextField(
                     value = namaLatin,
                     onValueChange = { namaLatin = it },
-                    label = { Text(stringResource(R.string.description)) },
+                    label = { Text("Deskripsi") },
                     maxLines = 4,
                     singleLine = false,
-                    keyboardOptions = KeyboardOptions(
-                        capitalization = KeyboardCapitalization.Sentences,
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Default
-                    ),
+                    keyboardOptions = KeyboardOptions.Default,
                     modifier = Modifier.padding(top = 8.dp)
                 )
+
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     OutlinedButton(
-                        onClick = { onDismissRequest() },
+                        onClick = onDismissRequest,
                         modifier = Modifier.padding(8.dp)
                     ) {
-                        Text(stringResource(R.string.cancel))
+                        Text("Batal")
                     }
                     OutlinedButton(
                         onClick = { onConfirmation(nama, namaLatin) },
-                        enabled = nama.isNotEmpty() && namaLatin.isNotEmpty(),
+                        enabled = nama.isNotBlank() && namaLatin.isNotBlank(),
                         modifier = Modifier.padding(8.dp)
                     ) {
-                        Text(stringResource(R.string.save))
+                        Text("Simpan")
                     }
-
                 }
             }
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
@@ -115,9 +114,10 @@ fun AddDialogPreview() {
     Asesment1Theme {
         RecipesDialog(
             bitmap = null,
-            onDismissRequest = {  },
-            onConfirmation = {_, _->  }
-
+            initialNama = "Ayam Bakar",
+            initialDeskripsi = "Dibakar dengan bumbu kecap",
+            onDismissRequest = {},
+            onConfirmation = { _, _ -> }
         )
     }
 }

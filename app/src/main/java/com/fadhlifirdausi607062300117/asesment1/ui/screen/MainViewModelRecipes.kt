@@ -9,6 +9,7 @@ import com.fadhlifirdausi607062300117.asesment1.model.Recipes
 import com.fadhlifirdausi607062300117.asesment1.network.ApiStatus
 import com.fadhlifirdausi607062300117.asesment1.network.RecipesApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -17,7 +18,6 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.ByteArrayOutputStream
 
 class MainViewModelRecipes : ViewModel() {
-
     var data = mutableStateOf(emptyList<Recipes>())
         private set
 
@@ -31,8 +31,8 @@ class MainViewModelRecipes : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             status.value = ApiStatus.LOADING
             try {
-                val allData = RecipesApi.service.getRecipes(userId) // Ambil semua data dari API
-                val filteredData = allData.filter { it.mine == "1" } // ✅ Hanya data milik user
+                val allData = RecipesApi.service.getRecipes(userId)
+                val filteredData = allData.filter { it.mine == "1" }
                 data.value = filteredData
                 status.value = ApiStatus.SUCCES
             } catch (e: Exception) {
@@ -41,6 +41,7 @@ class MainViewModelRecipes : ViewModel() {
             }
         }
     }
+
     fun saveData(userId: String, nama: String, namaLatin: String, bitmap: Bitmap) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -50,30 +51,54 @@ class MainViewModelRecipes : ViewModel() {
                     namaLatin.toRequestBody("text/plain".toMediaTypeOrNull()),
                     bitmap.toMultipartBody()
                 )
-
-                if (result.status == "success")
+                if (result.status == "success") {
+                    delay(1000)
                     retrievedata(userId)
-                else
+                } else {
                     throw Exception(result.message)
+                }
             } catch (e: Exception) {
-                Log.d("MainViewModel", "Failure: ${e.message}")
                 errorMessage.value = "Error: ${e.message}"
             }
         }
     }
 
-    private fun Bitmap.toMultipartBody(): MultipartBody.Part {
-        val stream = ByteArrayOutputStream()
-        compress(Bitmap.CompressFormat.JPEG, 80, stream)
-        val byteArray = stream.toByteArray()
-        val requestBody = byteArray.toRequestBody(
-            "image/jpg".toMediaTypeOrNull(), 0, byteArray.size)
-        return MultipartBody.Part.createFormData(
-            "image", "image.jpg", requestBody)
+    fun editData(userId: String, id: String, nama: String, namaLatin: String, bitmap: Bitmap?) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = if (bitmap != null) {
+                    // Edit dengan gambar
+                    RecipesApi.service.updateRecipe(
+                        userId,
+                        id,
+                        nama.toRequestBody("text/plain".toMediaTypeOrNull()),
+                        namaLatin.toRequestBody("text/plain".toMediaTypeOrNull()),
+                        bitmap.toMultipartBody()
+                    )
+                } else {
+                    // Edit tanpa gambar
+                    RecipesApi.service.updateRecipeTanpaGambar(
+                        userId,
+                        id,
+                        nama.toRequestBody("text/plain".toMediaTypeOrNull()),
+                        namaLatin.toRequestBody("text/plain".toMediaTypeOrNull())
+                    )
+                }
+
+                if (response.status == "success") {
+                    delay(1000)
+                    retrievedata(userId)
+                } else {
+                    throw Exception(response.message)
+                }
+            } catch (e: Exception) {
+                errorMessage.value = "Gagal mengedit: ${e.message}"
+            }
+        }
     }
 
 
-    fun deleteData(userId: String, id: String) { // Ubah parameter id menjadi String
+    fun deleteData(userId: String, id: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val result = RecipesApi.service.deleteRecipe(userId, id)
@@ -88,7 +113,15 @@ class MainViewModelRecipes : ViewModel() {
         }
     }
 
-fun clearMessage() {errorMessage.value = null}
+    private fun Bitmap.toMultipartBody(): MultipartBody.Part {
+        val stream = ByteArrayOutputStream()
+        compress(Bitmap.CompressFormat.JPEG, 80, stream)
+        val byteArray = stream.toByteArray()
+        val requestBody = byteArray.toRequestBody("image/jpg".toMediaTypeOrNull(), 0, byteArray.size)
+        return MultipartBody.Part.createFormData("image", "image.jpg", requestBody)
+    }
 
-
+    fun clearMessage() {
+        errorMessage.value = null
+    }
 }
