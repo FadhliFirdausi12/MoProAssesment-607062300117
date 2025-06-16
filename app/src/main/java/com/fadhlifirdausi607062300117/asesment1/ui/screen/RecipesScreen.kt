@@ -84,17 +84,24 @@ import com.fadhlifirdausi607062300117.asesment1.ui.theme.Asesment1Theme
 fun RecipesScreen(navController: NavHostController) {
     val context = LocalContext.current
     val dataStoreUser = UserDataStore(context)
+    val viewModel: MainViewModelRecipes = viewModel()
+
+    val user by dataStoreUser.userFlow.collectAsState(initial = User("", "", ""))
+    val errorMessage by viewModel.errorMessage
+
     var showRecipeDialog by remember { mutableStateOf(false) }
-    var bitmap : Bitmap?  by remember { mutableStateOf(null) }
+    var bitmap: Bitmap? by remember { mutableStateOf(null) }
+
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var selectedRecipeToDeleteId by remember { mutableStateOf<String?>(null) }
+
+    var showEditDialog by remember { mutableStateOf(false) }
+    var selectedRecipeToEdit by remember { mutableStateOf<Recipes?>(null) }
+
     val launcher = rememberLauncherForActivityResult(CropImageContract()) {
         bitmap = getCroppedImage(context.contentResolver, it)
         if (bitmap != null) showRecipeDialog = true
     }
-    val viewModel : MainViewModelRecipes = viewModel()
-    val user by dataStoreUser.userFlow.collectAsState(initial = User("", "", ""))
-    val errorMessage by viewModel.errorMessage
-    var showDeleteDialog by remember { mutableStateOf(false) }
-    var selectedHewanId by remember { mutableStateOf<String?>(null) }
 
     Scaffold(
         topBar = {
@@ -105,11 +112,13 @@ fun RecipesScreen(navController: NavHostController) {
                         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                         color = Color.White
                     )
-
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
@@ -117,7 +126,7 @@ fun RecipesScreen(navController: NavHostController) {
                     titleContentColor = Color.White
                 ),
                 actions = {
-                    IconButton(onClick = { /* TODO: Tambahkan aksi notifikasi */ }) {
+                    IconButton(onClick = { /* Tambahkan aksi notifikasi jika perlu */ }) {
                         Icon(
                             imageVector = Icons.Default.Notifications,
                             contentDescription = "Notifications",
@@ -137,7 +146,7 @@ fun RecipesScreen(navController: NavHostController) {
                     )
                 )
                 launcher.launch(options)
-            }){
+            }) {
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = stringResource(id = R.string.add_data)
@@ -145,29 +154,57 @@ fun RecipesScreen(navController: NavHostController) {
             }
         }
     ) { innerPadding ->
-//        ScreenContent(viewModel, user.email, modifier = Modifier.padding(innerPadding))
+
         ScreenContent(
             viewModel = viewModel,
             userId = user.email,
             modifier = Modifier.padding(innerPadding),
             onDeleteClick = { id ->
-                selectedHewanId = id
+                selectedRecipeToDeleteId = id
                 showDeleteDialog = true
+            },
+            onEditClick = { recipe ->
+                selectedRecipeToEdit = recipe
+                showEditDialog = true
             }
         )
+
         if (showRecipeDialog) {
             RecipesDialog(
                 bitmap = bitmap,
-                onDismissRequest = { showRecipeDialog = false })
-                 {
-                 nama, namaLatin -> viewModel.saveData(user.email, nama, namaLatin, bitmap!!)
+                onDismissRequest = { showRecipeDialog = false }
+            ) { nama, namaLatin ->
+                viewModel.saveData(user.email, nama, namaLatin, bitmap!!)
                 showRecipeDialog = false
             }
         }
+
+        if (showEditDialog && selectedRecipeToEdit != null) {
+            RecipesDialog(
+                bitmap = null,
+                initialNama = selectedRecipeToEdit!!.nama,
+                initialDeskripsi = selectedRecipeToEdit!!.namaLatin,
+                onDismissRequest = {
+                    showEditDialog = false
+                    selectedRecipeToEdit = null
+                }
+            ) { namaBaru, latinBaru ->
+                viewModel.editData(
+                    userId = user.email,
+                    id = selectedRecipeToEdit!!.id,
+                    nama = namaBaru,
+                    namaLatin = latinBaru,
+                    bitmap = null
+                )
+                showEditDialog = false
+                selectedRecipeToEdit = null
+            }
+        }
+
         if (showDeleteDialog) {
             DeleteConfirmationDialog(
                 onConfirmDelete = {
-                    selectedHewanId?.let { id ->
+                    selectedRecipeToDeleteId?.let { id ->
                         viewModel.deleteData(user.email, id)
                     }
                     showDeleteDialog = false
@@ -177,6 +214,7 @@ fun RecipesScreen(navController: NavHostController) {
                 }
             )
         }
+
         if (errorMessage != null) {
             Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
             viewModel.clearMessage()
@@ -185,9 +223,13 @@ fun RecipesScreen(navController: NavHostController) {
 }
 
 @Composable
-fun ScreenContent(viewModel:MainViewModelRecipes, userId:String, modifier: Modifier = Modifier,
-                  onDeleteClick: (String) -> Unit){
-
+fun ScreenContent(
+    viewModel: MainViewModelRecipes,
+    userId: String,
+    modifier: Modifier = Modifier,
+    onDeleteClick: (String) -> Unit,
+    onEditClick: (Recipes) -> Unit
+) {
     val data by viewModel.data
     val status by viewModel.status.collectAsState()
 
@@ -195,18 +237,16 @@ fun ScreenContent(viewModel:MainViewModelRecipes, userId:String, modifier: Modif
         viewModel.retrievedata(userId)
     }
 
-
     when (status) {
         ApiStatus.LOADING -> {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
-
-            ){
+            ) {
                 CircularProgressIndicator()
             }
-
         }
+
         ApiStatus.SUCCES -> {
             LazyVerticalGrid(
                 modifier = modifier.fillMaxSize().padding(4.dp),
@@ -214,37 +254,34 @@ fun ScreenContent(viewModel:MainViewModelRecipes, userId:String, modifier: Modif
                 contentPadding = PaddingValues(bottom = 80.dp)
             ) {
                 items(data) { recipes ->
-                    Log.d("RecipeScreen", recipes.toString())
                     ListItem(
                         recipes = recipes,
                         onDeleteClick = onDeleteClick,
-                        onEditClick = { selectedRecipe ->
-                            // TODO: Tambahkan logika edit di sini nanti
-                            // Contoh log sederhana dulu:
-                            Log.d("EDIT", "Klik edit: ${selectedRecipe.nama}")
-                        }
+                        onEditClick = onEditClick
                     )
                 }
             }
         }
-        ApiStatus.FAILED ->{
-            Column (
+
+        ApiStatus.FAILED -> {
+            Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                Text(text= stringResource(id=R.string.error))
+            ) {
+                Text(text = stringResource(id = R.string.error))
                 Button(
                     onClick = { viewModel.retrievedata(userId) },
-                    modifier = Modifier.padding(top=16.dp),
-                    contentPadding= PaddingValues(horizontal=32.dp,vertical=16.dp)
-                ){
-                    Text(text= stringResource(id=R.string.try_again))
+                    modifier = Modifier.padding(top = 16.dp),
+                    contentPadding = PaddingValues(horizontal = 32.dp, vertical = 16.dp)
+                ) {
+                    Text(text = stringResource(id = R.string.try_again))
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun ListItem(
